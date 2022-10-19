@@ -1,20 +1,24 @@
-# Homework # 13. (Admin panel)
+# Game "Words". (Through Django)
 
 ---
-![Main workflow](https://github.com/hillel-i-python-pro-i-2022-08-26/homework__django__V.Marakhovskyi/actions/workflows/main-workflow.yml/badge.svg?branch=admin)
+![Main workflow](https://github.com/hillel-i-python-pro-i-2022-08-26/word_jango_1_group/actions/workflows/main-workflow.yml/badge.svg)
 ![IDE](https://img.shields.io/badge/PyCharm-000000.svg?&style=for-the-badge&logo=PyCharm&logoColor=white)
 ![REPO](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)
 ![DJANGO](https://www.djangoproject.com/m/img/badges/djangomade124x25.gif)
-## 👨‍💻 Homework
+## 👾 Collective task
 
-General features o Django framework. Creating a custom user for admin panel. Creating admin panel for existing models.
+Building a simple game in way like web-application through Django.
+Main features: 
+🖖separate rooms,
+👯multiplayer,
+💾saving current status of game.
 
-### ▶️ Run
+### ▶️ Run 
 
-Make all actions needed for run homework from zero.
+Make all actions needed for run game from zero.
 
 ```shell
-make homework-i-run
+make game-i-run
 ```
 
 ### 🛣️ Install pre-commit and dependencies:
@@ -28,7 +32,7 @@ make init-dev
 Delete all created artifacts from run.
 
 ```shell
-make homework-i-purge
+make game-i-purge
 ```
 ### ♻️ Make migrations
 
@@ -43,28 +47,4 @@ Apply a migration
 
 ```shell
 make migrate
-```
-### 📗 Command: generate contacts
-
-Default value - 50 contacts
-
-```shell
-make generate-contacts
-```
-For custom generation with desired amount use a terminal command:
-```shell
-python manage.py generate_contacts --amount <desired qtty>
-```
-### 📕 Command: delete contacts
-
-Deleting all auto-generated contacts
-
-```shell
-make delete-contacts
-```
-### 🦸 Create a superuser
-login: admin | password: admin123
-
-```shell
-make init-dev-i-create-superuser
 ```

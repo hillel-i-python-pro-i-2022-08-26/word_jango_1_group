@@ -16,7 +16,4 @@ def input_words(request: HttpRequest) -> HttpResponse:
         return redirect("words:game")
     form = WordForm()
 
-    return render(
-        request,
-        "base.html",
-        {"form": form})
+    return render(request, "base.html", {"form": form})

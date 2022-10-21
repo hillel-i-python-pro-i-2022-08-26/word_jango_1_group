@@ -8,10 +8,11 @@ from django.urls import reverse
 
 class Room(models.Model):
     host = models.CharField(max_length=50)
+    room_name = models.CharField(max_length=50, null=True, unique=True)
     last_word = models.CharField(max_length=70)
 
     def get_absolute_url(self):
-        return reverse("", kwargs={"room_id": self.pk})
+        return reverse("words:room_in", kwargs={"room_name": self.room_name})
 
     def get_words(self):
         return self.words.filter(room_id=self.pk)

@@ -3,7 +3,7 @@
 
 {% block content %}
 <nav>
-    <div><a href="#">Start new game</a></div>
-    <div><a href="#">Load game</a></div>
+    <div><a href="{% url "words:start" %}">Start new game</a></div>
+    <div><a href="{% url "words:load" %}">Load game</a></div>
 </nav>
 {% endblock %}

@@ -8,10 +8,6 @@
     <h1>Вас вітає гра в "слова".</h1>
     <h1>Вітаємо, ВИ виграли!!!</h1><hr>
     <h1>Тут могла бути ваша реклама!!!</h1> <hr>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Next word">
-    </form>
+    {% block content %}{% endblock %}
 </body>
 </html>

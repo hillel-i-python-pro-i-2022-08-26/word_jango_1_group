@@ -2,10 +2,23 @@
 
 
 {% block content %}
-<h1>{{ room_name }}</h1>
-<form action="{% url "words:room_in" room_name=room_name %}" method="post">
-{% csrf_token %}
-{{ form.as_p }}
-<input type="submit" value="Submit">
-</form>
+    <h1>{{ room_name }}</h1>
+    <div>
+        <form action="{% url "words:room_in" room_name=room_name %}" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Submit">
+        </form>
+        <a href="{% url "words:stop_game" room_name=room_name %}">Stop game</a>
+    </div>
+    {% if previous_words %}
+        <h2>Last word: {{ last_word }}</h2>
+        <div>
+            <ol>
+                {% for word in previous_words %}
+                    <li>{{ word.word }}</li>
+                {% endfor %}
+            </ol>
+        </div>
+    {% endif %}
 {% endblock %}

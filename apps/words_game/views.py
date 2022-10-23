@@ -1,26 +1,10 @@
-from django.shortcuts import render, redirect
-import copy
-
 import copy
 
 from django.shortcuts import render, redirect
 
 from .forms import WordForm, StartGameForm
 from .models import Room
-
-
-# def input_words(request: HttpRequest) -> HttpResponse:
-#     if request.method == "POST":
-#         word_post = request.POST["word"]
-#         last_word = request.session.get("last_word", None)
-#         form = WordForm(request.POST)
-#         if not form.is_valid():
-#             return render(request, "index.html", {"form": form})
-#         form.save()
-#         return redirect("words:game")
-#     form = WordForm()
-#
-#     return render(request, "index.html", {"form": form})
+from .services.app import fill_context
 
 
 def index(request):
@@ -40,8 +24,7 @@ def start_game(request):
 
 def room_game(request, room_name):
     room = Room.objects.get(room_name=room_name)
-    previous_words = room.words.all()
-    context = {"room_name": room_name, "previous_words": previous_words}
+    context = fill_context(room)
     if request.method == "POST":
         post_data = copy.copy(request.POST)
         post_data["room"] = room.pk
@@ -50,10 +33,11 @@ def room_game(request, room_name):
             room.last_word = post_data["word"].lower().strip()
             room.save()
             form.save()
-            return render(request, "game_room.html", {"form": WordForm(), "room_name": room_name})
-        return render(request, "game_room.html", {"form": form, "room_name": room_name})
-    form = WordForm()
-    return render(request, "game_room.html", {"form": form, "room_name": room_name})
+            return redirect("words:room_in", room_name=room_name)
+        context["form"] = form
+        return render(request, "game_room.html", context)
+    context["form"] = WordForm()
+    return render(request, "game_room.html", context)
 
 
 def load_game(request):
@@ -65,5 +49,11 @@ def load_game(request):
     return render(request, "load_game.html", {"form": form})
 
 
-def stop_game(request):
-    pass
+def stop_game(request, room_name):
+    room = Room.objects.get(room_name=room_name)
+    context = {
+        "count_words": room.words.all().count(),
+        "room_name": room.room_name,
+    }
+    room.delete()
+    return render(request, "stop_game.html", context)

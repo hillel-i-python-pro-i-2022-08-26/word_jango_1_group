@@ -65,6 +65,10 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
             ],
+            'libraries': {
+                'rooms_tags': 'apps.words_game.templatetags.rooms_tags',
+
+            }
         },
     },
 ]

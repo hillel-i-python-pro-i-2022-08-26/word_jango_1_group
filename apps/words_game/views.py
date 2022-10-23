@@ -1,10 +1,8 @@
-import copy
-
 from django.shortcuts import render, redirect
 
 from .forms import WordForm, StartGameForm
 from .models import Room
-from .services.app import fill_context
+from .services.app import fill_context, update_post_data, update_last_word
 
 
 def index(request):
@@ -26,12 +24,10 @@ def room_game(request, room_name):
     room = Room.objects.get(room_name=room_name)
     context = fill_context(room)
     if request.method == "POST":
-        post_data = copy.copy(request.POST)
-        post_data["room"] = room.pk
+        post_data = update_post_data(request.POST, room.pk)
         form = WordForm(data=post_data)
         if form.is_valid():
-            room.last_word = post_data["word"].lower().strip()
-            room.save()
+            update_last_word(room, post_data["word"])
             form.save()
             return redirect("words:room_in", room_name=room_name)
         context["form"] = form

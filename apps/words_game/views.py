@@ -1,8 +1,12 @@
-from django.http import HttpRequest, HttpResponse, QueryDict
+from django.shortcuts import render, redirect
+import copy
+
+import copy
+
 from django.shortcuts import render, redirect
 
 from .forms import WordForm, StartGameForm
-from .models import Word, Room
+from .models import Room
 
 
 # def input_words(request: HttpRequest) -> HttpResponse:
@@ -36,27 +40,25 @@ def start_game(request):
 
 def room_game(request, room_name):
     room = Room.objects.get(room_name=room_name)
+    previous_words = room.words.all()
+    context = {"room_name": room_name, "previous_words": previous_words}
     if request.method == "POST":
-        form = WordForm(room_name, request.POST)
-        print("Method POST")
+        post_data = copy.copy(request.POST)
+        post_data["room"] = room.pk
+        form = WordForm(data=post_data)
         if form.is_valid():
-            print("valid")
-            room.last_word = request.POST["word"].lower()
+            room.last_word = post_data["word"].lower().strip()
             room.save()
-            word = Word(word=room.last_word, room_id=room.pk)
-            word.save()
-            # return redirect("words:room_in", room_name=room_name, form=form)
-            return render(request, "game_room.html", {"form": form, "room_name": room_name})
-        print("Nevalid")
+            form.save()
+            return render(request, "game_room.html", {"form": WordForm(), "room_name": room_name})
         return render(request, "game_room.html", {"form": form, "room_name": room_name})
-    form = WordForm(room_name)
+    form = WordForm()
     return render(request, "game_room.html", {"form": form, "room_name": room_name})
 
 
 def load_game(request):
     if request.method == "POST":
         form = StartGameForm(request.POST)
-        print(form)
         if form.is_valid():
             redirect("words:room_in", room_name=request.POST["room_name"])
     form = StartGameForm()

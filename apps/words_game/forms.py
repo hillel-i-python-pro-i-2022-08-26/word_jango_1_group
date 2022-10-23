@@ -6,14 +6,14 @@ from .models import Word, Room
 from apps.words_game.services.app import validate_words
 
 
-class StartGameForm(forms.Form):
-    host = forms.CharField(max_length=50)
-    room_name = forms.ModelChoiceField(queryset=Room.objects.all())
+class StartGameForm(forms.ModelForm):
+    #host = forms.CharField(max_length=50)    #for choice room
+    #room_name = forms.ModelChoiceField(queryset=Room.objects.all()) #for choice room
     # def clean_room_name(self):
     #     room =
-    #class Meta:
-        #model = Room
-        #fields = ("host", "room_name")
+    class Meta:
+        model = Room
+        fields = ("host", "room_name")
 
 
 class WordForm(forms.ModelForm):

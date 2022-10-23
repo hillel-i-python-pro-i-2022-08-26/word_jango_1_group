@@ -25,8 +25,7 @@ def index(request):
 
 def start_game(request):
     if request.method == "POST":
-        #form = StartGameForm(request.POST)
-        form = StartGameForm()
+        form = StartGameForm(request.POST)
         if form.is_valid():
             room = form.save()
             return redirect(room)
@@ -36,7 +35,6 @@ def start_game(request):
 
 
 def room_game(request, room_name):
-    #room = Room.objects.get(room_name=room_name)
     room = get_object_or_404(Room, room_name=room_name)
     if request.method == "POST":
         form = WordForm(room_name, request.POST)
@@ -58,6 +56,7 @@ def room_game(request, room_name):
 def load_game(request):
     if request.method == "POST":
         form = StartGameForm(request.POST)
+        #form = StartGameForm() #for choice room
         print(form)
         if form.is_valid():
             redirect("words:room_in", room_name=request.POST["room_name"])

@@ -17,6 +17,9 @@ class Room(models.Model):
     def get_words(self):
         return self.words.filter(room_id=self.pk)
 
+    def __str__(self):
+        return self.room_name
+
 
 
 

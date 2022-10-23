@@ -25,7 +25,8 @@ def index(request):
 
 def start_game(request):
     if request.method == "POST":
-        form = StartGameForm(request.POST)
+        #form = StartGameForm(request.POST)
+        form = StartGameForm()
         if form.is_valid():
             room = form.save()
             return redirect(room)

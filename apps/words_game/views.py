@@ -1,22 +1,8 @@
-from django.http import HttpRequest, HttpResponse, QueryDict
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 from .forms import WordForm, StartGameForm
-from .models import Word, Room
-
-
-# def input_words(request: HttpRequest) -> HttpResponse:
-#     if request.method == "POST":
-#         word_post = request.POST["word"]
-#         last_word = request.session.get("last_word", None)
-#         form = WordForm(request.POST)
-#         if not form.is_valid():
-#             return render(request, "index.html", {"form": form})
-#         form.save()
-#         return redirect("words:game")
-#     form = WordForm()
-#
-#     return render(request, "index.html", {"form": form})
+from .models import Room
+from .services import GameCircle
 
 
 def index(request):
@@ -35,33 +21,36 @@ def start_game(request):
 
 
 def room_game(request, room_name):
-    room = Room.objects.get(room_name=room_name)
+    room = get_object_or_404(Room, room_name=room_name)
+    game_circle = GameCircle(room)
+    context = game_circle.fill_context()
     if request.method == "POST":
-        form = WordForm(room_name, request.POST)
-        print("Method POST")
+        post_data = game_circle.update_post_data(request.POST)
+        form = WordForm(data=post_data)
         if form.is_valid():
-            print("valid")
-            room.last_word = request.POST["word"].lower()
-            room.save()
-            word = Word(word=room.last_word, room_id=room.pk)
-            word.save()
-            # return redirect("words:room_in", room_name=room_name, form=form)
-            return render(request, "game_room.html", {"form": form, "room_name": room_name})
-        print("Nevalid")
-        return render(request, "game_room.html", {"form": form, "room_name": room_name})
-    form = WordForm(room_name)
-    return render(request, "game_room.html", {"form": form, "room_name": room_name})
+            game_circle.update_last_word(post_data["word"])
+            form.save()
+            return redirect(room.get_absolute_url())
+        context["form"] = form
+        return render(request, "game_room.html", context)
+    context["form"] = WordForm()
+    return render(request, "game_room.html", context)
 
 
 def load_game(request):
     if request.method == "POST":
-        form = StartGameForm(request.POST)
-        print(form)
-        if form.is_valid():
-            redirect("words:room_in", room_name=request.POST["room_name"])
+        room = get_object_or_404(Room, room_name=request.POST["room_name"])
+        if request.POST["password"] == room.password:
+            return redirect(room.get_absolute_url())
     form = StartGameForm()
     return render(request, "load_game.html", {"form": form})
 
 
-def stop_game(request):
-    pass
+def stop_game(request, room_name):
+    room = Room.objects.get(room_name=room_name)
+    context = {
+        "count_words": room.words.all().count(),
+        "room_name": room.room_name,
+    }
+    room.delete()
+    return render(request, "stop_game.html", context)

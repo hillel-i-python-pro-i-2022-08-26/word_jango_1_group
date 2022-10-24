@@ -1,1 +1,1 @@
-from .app import validate_words
+from .app import GameCircle

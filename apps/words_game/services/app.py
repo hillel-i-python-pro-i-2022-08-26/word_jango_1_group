@@ -1,21 +1,45 @@
-# from django.utils import timezone
-from apps.words_game.models import Room
-
-#
-#
-# def validate_words(input_word):
-#     required_datetime = timezone.now()
-#     last_word = Word.objects.get(input_word, ).filter(created_at__lt=required_datetime)
-#     if input_word[-1] == last_word[0]:
-#
-#
+import copy
 
 
-def validate_words(new_word, room_name):
-    room = Room.objects.get(room_name=room_name)
-    last_word = room.last_word
-    all_words = set(map(lambda obj: obj.word, room.words.all()))
-    if last_word:
-        if new_word[0] != last_word[-1] or new_word in all_words:
-            return False
-    return True
+class GameCircle:
+    def __init__(self, room):
+        self.room = room
+
+    def fill_context(self):
+        return {
+            "room_name": self.room.room_name,
+            "previous_words": self.room.words.all(),
+            "last_word": self.room.last_word,
+        }
+
+    def update_post_data(self, request_data):
+        post_data = copy.copy(request_data)
+        post_word_cleaned = post_data["word"].lower().strip()
+        post_data["word"] = post_word_cleaned
+        post_data["room"] = self.room.pk
+        return post_data
+
+    def update_last_word(self, last_word):
+        self.room.last_word = last_word
+        self.room.save()
+
+
+"""Old style"""
+# def fill_context(room_obj):
+#     return {
+#         "room_name": room_obj.room_name,
+#         "previous_words": room_obj.words.all(),
+#         "last_word": room_obj.last_word,
+#     }
+#
+#
+# def update_post_data(request_data, room_id):
+#     post_data = copy.copy(request_data)
+#     post_data["word"] = post_data["word"].lower().strip()
+#     post_data["room"] = room_id
+#     return post_data
+#
+#
+# def update_last_word(room, last_word):
+#     room.last_word = last_word
+#     room.save()

@@ -9,11 +9,16 @@ from .models import Word, Room
 class StartGameForm(forms.ModelForm):
     class Meta:
         model = Room
-        fields = ("host", "room_name")
+        fields = ("room_name", "password")
+        widgets = {
+            "password": forms.PasswordInput(),
+        }
 
 
 class WordForm(forms.ModelForm):
     class Meta:
         model = Word
         fields = ("word", "room")
-        widgets = {"room": forms.HiddenInput()}
+        widgets = {
+            "room": forms.HiddenInput(),
+        }

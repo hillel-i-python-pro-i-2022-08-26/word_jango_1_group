@@ -4,8 +4,8 @@ from django.urls import reverse
 
 
 class Room(models.Model):
-    host = models.CharField(max_length=50)
     room_name = models.CharField(max_length=50, null=True, unique=True)
+    password = models.CharField(max_length=150, null=True)
     last_word = models.CharField(max_length=70)
 
     def get_absolute_url(self):

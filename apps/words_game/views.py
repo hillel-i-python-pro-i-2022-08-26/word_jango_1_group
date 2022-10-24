@@ -1,8 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 from .forms import WordForm, StartGameForm
 from .models import Room
-from .services.app import GameCircle
+from .services import GameCircle
 
 
 def index(request):
@@ -30,7 +30,7 @@ def room_game(request, room_name):
         if form.is_valid():
             game_circle.update_last_word(post_data["word"])
             form.save()
-            return redirect("words:room_in", room_name=room_name)
+            return redirect(room.get_absolute_url())
         context["form"] = form
         return render(request, "game_room.html", context)
     context["form"] = WordForm()
@@ -39,9 +39,9 @@ def room_game(request, room_name):
 
 def load_game(request):
     if request.method == "POST":
-        form = StartGameForm(request.POST)
-        if form.is_valid():
-            redirect("words:room_in", room_name=request.POST["room_name"])
+        room = get_object_or_404(Room, room_name=request.POST["room_name"])
+        if request.POST["password"] == room.password:
+            return redirect(room.get_absolute_url())
     form = StartGameForm()
     return render(request, "load_game.html", {"form": form})
 

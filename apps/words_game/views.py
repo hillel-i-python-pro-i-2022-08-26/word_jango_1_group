@@ -21,7 +21,7 @@ def start_game(request):
 
 
 def room_game(request, room_name):
-    room = Room.objects.get(room_name=room_name)
+    room = get_object_or_404(Room, room_name=room_name)
     game_circle = GameCircle(room)
     context = game_circle.fill_context()
     if request.method == "POST":

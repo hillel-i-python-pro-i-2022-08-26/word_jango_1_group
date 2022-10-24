@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 
 from .forms import WordForm, StartGameForm
 from .models import Room
-from .services.app import fill_context, update_post_data, update_last_word
+from .services.app import GameCircle
 
 
 def index(request):
@@ -22,12 +22,13 @@ def start_game(request):
 
 def room_game(request, room_name):
     room = Room.objects.get(room_name=room_name)
-    context = fill_context(room)
+    game_circle = GameCircle(room)
+    context = game_circle.fill_context()
     if request.method == "POST":
-        post_data = update_post_data(request.POST, room.pk)
+        post_data = game_circle.update_post_data(request.POST)
         form = WordForm(data=post_data)
         if form.is_valid():
-            update_last_word(room, post_data["word"])
+            game_circle.update_last_word(post_data["word"])
             form.save()
             return redirect("words:room_in", room_name=room_name)
         context["form"] = form

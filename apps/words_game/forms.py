@@ -7,8 +7,8 @@ from apps.words_game.services.app import validate_words
 
 
 class StartGameForm(forms.ModelForm):
-    #host = forms.CharField(max_length=50)    #for choice room
-    #room_name = forms.ModelChoiceField(queryset=Room.objects.all()) #for choice room
+    # host = forms.CharField(max_length=50)    #for choice room
+    # room_name = forms.ModelChoiceField(queryset=Room.objects.all()) #for choice room
     # def clean_room_name(self):
     #     room =
     class Meta:

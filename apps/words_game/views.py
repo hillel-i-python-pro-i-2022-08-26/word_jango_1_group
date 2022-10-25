@@ -56,7 +56,7 @@ def room_game(request, room_name):
 def load_game(request):
     if request.method == "POST":
         form = StartGameForm(request.POST)
-        #form = StartGameForm() #for choice room
+        # form = StartGameForm() #for choice room
         print(form)
         if form.is_valid():
             redirect("words:room_in", room_name=request.POST["room_name"])

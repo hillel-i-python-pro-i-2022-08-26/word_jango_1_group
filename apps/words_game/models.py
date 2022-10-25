@@ -21,8 +21,6 @@ class Room(models.Model):
         return self.room_name
 
 
-
-
 class Word(models.Model):
     word = models.CharField(max_length=70)
     room = models.ForeignKey(Room, on_delete=models.CASCADE, null=True, related_name="words")

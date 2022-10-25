@@ -8,7 +8,8 @@ register = template.Library()
 def get_rooms():
     return Room.objects.all()
 
-#@register.inclusion_tag('путь где использ')
-#def show_rooms():
-    #rooms = Room.objects.all()
-    #return {'rooms': rooms}
+
+# @register.inclusion_tag('путь где использ')
+# def show_rooms():
+# rooms = Room.objects.all()
+# return {'rooms': rooms}

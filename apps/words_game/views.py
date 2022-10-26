@@ -27,7 +27,8 @@ def start_game(request):
     if request.method == "POST":
         form = StartGameForm(request.POST)
         if form.is_valid():
-            room = form.save()
+            #room = form.save()
+            room = Room.objects.create(**form.cleaned_data)
             return redirect(room)
         return render(request, "start_game.html", {"form": form})
     form = StartGameForm()

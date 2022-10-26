@@ -7,13 +7,23 @@ from apps.words_game.services.app import validate_words
 
 
 class StartGameForm(forms.ModelForm):
+#class StartGameForm(forms.Form):
+    #host = forms.CharField(max_length=50, widget=forms.TextInput(attrs={"class": "form-control"}))
+    #room_name = forms.CharField(max_length=50, widget=forms.TextInput(attrs={"class": "form-control"}))
+
     # host = forms.CharField(max_length=50)    #for choice room
     # room_name = forms.ModelChoiceField(queryset=Room.objects.all()) #for choice room
     # def clean_room_name(self):
     #     room =
     class Meta:
         model = Room
-        fields = ("host", "room_name")
+        fields = ("host", "room_name",)
+        widgets = {
+            'host': forms.TextInput(attrs={'class': 'form-control'}),
+            'room_name': forms.TextInput(attrs={'class': 'form-control'})
+        }
+
+
 
 
 class WordForm(forms.ModelForm):

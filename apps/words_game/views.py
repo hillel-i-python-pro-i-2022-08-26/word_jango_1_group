@@ -1,5 +1,5 @@
 from django.http import HttpRequest, HttpResponse, QueryDict
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 from .forms import WordForm, StartGameForm
 from .models import Word, Room
@@ -27,7 +27,8 @@ def start_game(request):
     if request.method == "POST":
         form = StartGameForm(request.POST)
         if form.is_valid():
-            room = form.save()
+            #room = form.save()
+            room = Room.objects.create(**form.cleaned_data)
             return redirect(room)
         return render(request, "start_game.html", {"form": form})
     form = StartGameForm()
@@ -35,7 +36,7 @@ def start_game(request):
 
 
 def room_game(request, room_name):
-    room = Room.objects.get(room_name=room_name)
+    room = get_object_or_404(Room, room_name=room_name)
     if request.method == "POST":
         form = WordForm(room_name, request.POST)
         print("Method POST")
@@ -56,6 +57,7 @@ def room_game(request, room_name):
 def load_game(request):
     if request.method == "POST":
         form = StartGameForm(request.POST)
+        # form = StartGameForm() #for choice room
         print(form)
         if form.is_valid():
             redirect("words:room_in", room_name=request.POST["room_name"])

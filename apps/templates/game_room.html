@@ -3,9 +3,13 @@
 
 {% block content %}
 <h1>{{ room_name }}</h1>
-<form action="{% url "words:room_in" room_name=room_name %}" method="post">
+
+<form action="{{ room_name.get_absolute_url }}" method="post">
+
 {% csrf_token %}
-{{ form.as_p }}
-<input type="submit" value="Submit">
+    {{ form.as_p }}
+    <input type="submit" value="Submit">
+
+
 </form>
 {% endblock %}
